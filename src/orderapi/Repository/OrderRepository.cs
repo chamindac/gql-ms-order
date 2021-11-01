@@ -1,4 +1,5 @@
 ﻿using orderapi.Contracts;
+using orderapi.Entities;
 using orderapi.Entities.Context;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,16 @@ namespace orderapi.Repository
         public OrderRepository(OrderDbContext context)
         {
             _context = context;
+        }
+
+        public IEnumerable<Order> GetAll() => _context.Orders.ToList();
+
+        public Order CreateOrder(Order order)
+        {
+            order.Date = DateTime.Now;
+            _context.Add(order);
+            _context.SaveChanges();
+            return order;
         }
     }
 }
