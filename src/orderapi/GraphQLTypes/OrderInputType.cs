@@ -13,6 +13,7 @@ namespace orderapi.GraphQLTypes
             Name = "orderInput";
             Field<NonNullGraphType<StringGraphType>>("number");
             Field<NonNullGraphType<StringGraphType>>("customername");
+            Field<ListGraphType<OrderItemInputType>>("items");
             //Field<NonNullGraphType<DateTimeGraphType>>("date");
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyNetQ;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +35,9 @@ namespace orderapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // EventBus
+            services.AddSingleton(RabbitHutch.CreateBus(Configuration["MQ:Con"]));
+
             services.AddDbContext<OrderDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("sqlConString")));
 
