@@ -36,7 +36,12 @@ namespace orderapi.Repository
                 OrderAmount = order.Items.Sum(oi => oi.Price * oi.Quantity)
             };
 
-            _bus.PubSub.Publish(orderCreatedMsg);
+            using (IBus mybus = RabbitHutch.CreateBus("host=20.55.198.150;virtualHost=EDCVHOST;username=myuser;password=mypassword"))
+            {
+                mybus.PubSub.Publish(orderCreatedMsg);
+            }
+
+            //_bus.PubSub.Publish(orderCreatedMsg);
 
             return order;
         }
