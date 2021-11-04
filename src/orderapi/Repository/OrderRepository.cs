@@ -26,6 +26,7 @@ namespace orderapi.Repository
         public Order CreateOrder(Order order)
         {
             order.Date = DateTime.Now;
+            order.State = OrderState.New;
             _context.Add(order);
             _context.SaveChanges();
 
@@ -36,9 +37,25 @@ namespace orderapi.Repository
                 OrderAmount = order.Items.Sum(oi => oi.Price * oi.Quantity)
             };
 
-            _bus.PubSub.Publish(orderCreatedMsg);
+            _bus.PubSub.Publish<OrderCreatedMessage>(orderCreatedMsg,"Order.NewOrder");
 
             return order;
+        }
+
+        public void CancelOrderNoCredits(int orderId)
+        {
+            var order = _context.Orders.First(o => o.Id == orderId);
+            order.State = OrderState.CanelledLowCredit;
+            _context.Orders.Update(order);
+            _context.SaveChanges();
+        }
+
+        public void ConfirmOrderWithCredits(int orderId)
+        {
+            var order = _context.Orders.First(o => o.Id == orderId);
+            order.State = OrderState.Confirmed;
+            _context.Orders.Update(order);
+            _context.SaveChanges();
         }
     }
 }

@@ -10,8 +10,8 @@ using orderapi.Entities.Context;
 namespace orderapi.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20211027082915_IntialDb")]
-    partial class IntialDb
+    [Migration("20211104041702_IntialDB")]
+    partial class IntialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,10 @@ namespace orderapi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CustomerCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<string>("CustomerName")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
@@ -38,6 +42,9 @@ namespace orderapi.Migrations
                     b.Property<string>("Number")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace orderapi.Migrations
 {
-    public partial class IntialDb : Migration
+    public partial class IntialDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,8 +14,10 @@ namespace orderapi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    CustomerCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     CustomerName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

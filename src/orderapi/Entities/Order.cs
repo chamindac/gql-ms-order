@@ -16,9 +16,20 @@ namespace orderapi.Entities
         public int Id { get; set; }
         [MaxLength(10)]
         public string Number{ get; set; }
+        [MaxLength(10)]
+        public string CustomerCode { get; set; }
         [MaxLength(250)]
         public string CustomerName { get; set; }
         public DateTime Date { get; set; }
+        public OrderState State { get; set; }
         public ICollection<OrderItem> Items { get; set; }
+    }
+
+    public enum OrderState
+    {
+        New,
+        CanelledLowCredit,
+        Confirmed,
+        Shipped
     }
 }

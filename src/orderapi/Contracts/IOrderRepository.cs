@@ -10,5 +10,7 @@ namespace orderapi.Contracts
     {
         IEnumerable<Order> GetAll();
         Order CreateOrder(Order order);
+        void CancelOrderNoCredits(int orderId);
+        void ConfirmOrderWithCredits(int orderId);
     }
 }

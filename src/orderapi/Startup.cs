@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EasyNetQ;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
+using messages;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using orderapi.Contracts;
 using orderapi.Entities.Context;
+using orderapi.EventHandlers;
 using orderapi.GrapshQL.GraphQLSchema;
 using orderapi.Repository;
 
@@ -67,7 +69,7 @@ namespace orderapi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBus bus)
         {
             if (env.IsDevelopment())
             {
@@ -89,6 +91,17 @@ namespace orderapi
             {
                 endpoints.MapControllers();
             });
+
+            BindMessagehandlers(bus, Configuration.GetConnectionString("sqlConString"));
+        }
+
+        private void BindMessagehandlers(IBus bus, string conString)
+        {
+            OrderHandler.bus = bus;
+            OrderHandler.ConString = conString;
+            bus.PubSub.Subscribe<CustomerOrderCreditAvailableMessage>("OrderCreditAvailableCheck", OrderHandler.CustomerOrderCreditAvailable, x => x.WithTopic("Order.CreditAvailable"));
+            bus.PubSub.Subscribe<CustomerOrderCreditNotAvailableMessage>("OrderCreditNotAvailableCheck", OrderHandler.CustomerOrderCreditNotAvailable, x => x.WithTopic("Order.CreditNotAvailable"));
+            
         }
     }
 }
