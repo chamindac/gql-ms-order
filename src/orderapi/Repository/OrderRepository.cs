@@ -5,6 +5,7 @@ using orderapi.Entities;
 using orderapi.Entities.Context;
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,8 +22,9 @@ namespace orderapi.Repository
             _bus = bus;
         }
 
-        public IEnumerable<Order> GetAll() => _context.Orders.ToList();
-
+        public IEnumerable<Order> GetAll() {
+            return _context.Orders.Include(o=>o.Items).ToList();
+        }
         public Order CreateOrder(Order order)
         {
             order.Date = DateTime.Now;
@@ -34,6 +36,7 @@ namespace orderapi.Repository
             {
                 OrderId = order.Id,
                 OrderNumber = order.Number,
+                CustomerCode = order.CustomerCode,
                 OrderAmount = order.Items.Sum(oi => oi.Price * oi.Quantity)
             };
 
